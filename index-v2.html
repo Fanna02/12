@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея Диких и Сердитых Обезьян</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-zinc-900 text-zinc-100 font-sans antialiased selection:bg-red-600 selection:text-white">
+
+    <!-- Навигация -->
+    <header class="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">😡</span>
+                <span class="font-black text-xl tracking-wider text-red-500">ANGRY PRIMATES</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                <a href="#home" class="hover:text-red-500 transition-colors">Главная</a>
+                <a href="#gallery" class="hover:text-red-500 transition-colors">Галерея злости</a>
+                <a href="#about" class="hover:text-red-500 transition-colors">О проекте</a>
+            </nav>
+            <a href="#gallery" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded transition-all transform hover:scale-105">
+                Смотреть фото
+            </a>
+        </div>
+    </header>
+
+    <!-- Главный баннер (Hero) -->
+    <section id="home" class="relative bg-zinc-950 py-24 md:py-32 overflow-hidden border-b border-zinc-800">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.15),transparent_60%)]"></div>
+        <div class="max-w-5xl mx-auto text-center px-4 relative z-10">
+            <span class="text-red-500 text-xs font-bold uppercase tracking-widest bg-red-950/50 border border-red-900/50 px-3 py-1 rounded-full">Осторожно: высокий уровень агрессии</span>
+            <h1 class="mt-6 text-4xl md:text-6xl font-black tracking-tight text-white uppercase leading-none">
+                Территория <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Злых Обезьян</span>
+            </h1>
+            <p class="mt-6 text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+                Добро пожаловать на самый эмоциональный и яростный сайт. Здесь собраны лучшие кадры приматов, которых явно кто-то вывел из себя.
+            </p>
+            <div class="mt-10 flex flex-wrap justify-center gap-4">
+                <a href="#gallery" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded shadow-lg shadow-red-900/20 transition-all">
+                    Перейти к фотографиям
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Галерея -->
+    <section id="gallery" class="py-20 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">В ярости и бешенстве</h2>
+                <p class="mt-4 text-zinc-400">Мы собрали множество атмосферных и качественных фотографий злых обезьян со всего мира.</p>
+            </div>
+
+            <!-- Сетка картинок -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Карточка 1 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1601244439193-01826b52a5bd?auto=format&fit=crop&q=80&w=800" 
+                             alt="Злая обезьяна" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Яростный шимпанзе</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=800" 
+                             alt="Раздраженный примат" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Хмурый макак</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 7/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=800" 
+                             alt="Злая горилла" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Агрессивный вожак</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 10/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 4 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1570481662006-a3a1374699e8?auto=format&fit=crop&q=80&w=800" 
+                             alt="Сердитый павиан" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Оскаленный павиан</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 8.5/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 5 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&q=80&w=800" 
+                             alt="Обезьяна в ярости" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Дикий оскал</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9.5/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 6 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&q=80&w=800" 
+                             alt="Недовольный примат" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Угрожающий взгляд</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 8/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 7 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1591824438708-ce405f36ba3d?auto=format&fit=crop&q=80&w=800" 
+                             alt="Кричащая обезьяна" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Громкий крик</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9.8/10</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 8 -->
+                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
+                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
+                        <img src="https://images.unsplash.com/photo-1522008342704-6b265b543c37?auto=format&fit=crop&q=80&w=800" 
+                             alt="Сердитая маленькая обезьяна" 
+                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 bg-zinc-950">
+                        <h3 class="text-sm font-bold text-zinc-200">Маленький злюка</h3>
+                        <p class="text-xs text-red-500 mt-1">Уровень злости: 6.5/10</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- О проекте -->
+    <section id="about" class="py-20 bg-zinc-950 border-t border-zinc-800">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold uppercase text-white">Зачем это нужно?</h2>
+            <p class="mt-4 text-zinc-400 leading-relaxed">
+                Сайт спроектирован специально для демонстрации возможностей работы с изображениями, адаптивной сетки стилей Tailwind CSS и семантической разметки HTML5. Ни одна обезьяна в процессе разработки не пострадала (хотя, судя по фото, они все равно недовольны).
+            </p>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="bg-zinc-950 py-8 border-t border-zinc-900 text-center text-xs text-zinc-600 tracking-wider uppercase">
+        <p>&copy; 2026 Angry Primates Corp. Все права защищены от укусов.</p>
+    </footer>
+
+</body>
+</html>
