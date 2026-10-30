@@ -3,182 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Галерея Диких и Сердитых Обезьян</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Angry Monkeys Premium Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        html { scroll-behavior: smooth; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
-<body class="bg-zinc-900 text-zinc-100 font-sans antialiased selection:bg-red-600 selection:text-white">
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col">
 
     <!-- Навигация -->
-    <header class="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl">😡</span>
-                <span class="font-black text-xl tracking-wider text-red-500">ANGRY PRIMATES</span>
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">🦧</span>
+                <h1 class="text-2xl font-black tracking-wider text-amber-500 uppercase">AngryMonkeys</h1>
             </div>
-            <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
-                <a href="#home" class="hover:text-red-500 transition-colors">Главная</a>
-                <a href="#gallery" class="hover:text-red-500 transition-colors">Галерея злости</a>
-                <a href="#about" class="hover:text-red-500 transition-colors">О проекте</a>
+            <nav class="flex space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-700">
+                <button onclick="switchTab('free-gallery')" id="btn-free-gallery" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 bg-amber-500 text-gray-900">
+                    Free Фото
+                </button>
+                <button onclick="switchTab('premium-gallery')" id="btn-premium-gallery" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white">
+                    Premium VIP
+                </button>
+                <button onclick="switchTab('billing')" id="btn-billing" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white flex items-center gap-1">
+                    💳 Баланс: <span id="balance-display" class="text-amber-400 font-mono">$0.00</span>
+                </button>
             </nav>
-            <a href="#gallery" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded transition-all transform hover:scale-105">
-                Смотреть фото
-            </a>
         </div>
     </header>
 
-    <!-- Главный баннер (Hero) -->
-    <section id="home" class="relative bg-zinc-950 py-24 md:py-32 overflow-hidden border-b border-zinc-800">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.15),transparent_60%)]"></div>
-        <div class="max-w-5xl mx-auto text-center px-4 relative z-10">
-            <span class="text-red-500 text-xs font-bold uppercase tracking-widest bg-red-950/50 border border-red-900/50 px-3 py-1 rounded-full">Осторожно: высокий уровень агрессии</span>
-            <h1 class="mt-6 text-4xl md:text-6xl font-black tracking-tight text-white uppercase leading-none">
-                Территория <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Злых Обезьян</span>
-            </h1>
-            <p class="mt-6 text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-                Добро пожаловать на самый эмоциональный и яростный сайт. Здесь собраны лучшие кадры приматов, которых явно кто-то вывел из себя.
-            </p>
-            <div class="mt-10 flex flex-wrap justify-center gap-4">
-                <a href="#gallery" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded shadow-lg shadow-red-900/20 transition-all">
-                    Перейти к фотографиям
-                </a>
+    <!-- Основной контент -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8">
+        
+        <!-- ВКЛАДКА 1: БЕСПЛАТНЫЕ ФОТО (Простые обезьянки) -->
+        <section id="free-gallery" class="tab-content active space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-white mb-2">Обычные Обезьянки</h2>
+                <p class="text-gray-400">Каталог стандартных приматов в их естественной среде. Доступно бесплатно.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Галерея -->
-    <section id="gallery" class="py-20 bg-zinc-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">В ярости и бешенстве</h2>
-                <p class="mt-4 text-zinc-400">Мы собрали множество атмосферных и качественных фотографий злых обезьян со всего мира.</p>
-            </div>
-
-            <!-- Сетка картинок -->
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Карточка 1 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1601244439193-01826b52a5bd?auto=format&fit=crop&q=80&w=800" 
-                             alt="Злая обезьяна" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                <!-- Обезьяна 1 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=600" alt="Обычная обезьяна" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Яростный шимпанзе</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9/10</p>
-                    </div>
-                </div>
-
-                <!-- Карточка 2 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=800" 
-                             alt="Раздраженный примат" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Хмурый макак</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 7/10</p>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Макака обыкновенная</h4>
+                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
                     </div>
                 </div>
-
-                <!-- Карточка 3 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=800" 
-                             alt="Злая горилла" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                <!-- Обезьяна 2 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1570288685280-7802a8f8c4b3?auto=format&fit=crop&q=80&w=600" alt="Обезьяна сидит" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Агрессивный вожак</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 10/10</p>
-                    </div>
-                </div>
-
-                <!-- Карточка 4 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1570481662006-a3a1374699e8?auto=format&fit=crop&q=80&w=800" 
-                             alt="Сердитый павиан" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Оскаленный павиан</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 8.5/10</p>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Любопытный шимпанзе</h4>
+                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1570288685280-7802a8f8c4b3?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
                     </div>
                 </div>
-
-                <!-- Карточка 5 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&q=80&w=800" 
-                             alt="Обезьяна в ярости" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                <!-- Обезьяна 3 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=600" alt="Маленькая обезьяна" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Дикий оскал</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9.5/10</p>
-                    </div>
-                </div>
-
-                <!-- Карточка 6 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&q=80&w=800" 
-                             alt="Недовольный примат" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Угрожающий взгляд</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 8/10</p>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Спокойный примат</h4>
+                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
                     </div>
                 </div>
-
-                <!-- Карточка 7 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1591824438708-ce405f36ba3d?auto=format&fit=crop&q=80&w=800" 
-                             alt="Кричащая обезьяна" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+                <!-- Обезьяна 4 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=600" alt="Шимпанзе портрет" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Громкий крик</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 9.8/10</p>
-                    </div>
-                </div>
-
-                <!-- Карточка 8 -->
-                <div class="group relative bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden transition-all hover:border-red-500/50">
-                    <div class="aspect-square w-full overflow-hidden bg-zinc-800">
-                        <img src="https://images.unsplash.com/photo-1522008342704-6b265b543c37?auto=format&fit=crop&q=80&w=800" 
-                             alt="Сердитая маленькая обезьяна" 
-                             class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="p-4 bg-zinc-950">
-                        <h3 class="text-sm font-bold text-zinc-200">Маленький злюка</h3>
-                        <p class="text-xs text-red-500 mt-1">Уровень злости: 6.5/10</p>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Молодой шимпанзе</h4>
+                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- О проекте -->
-    <section id="about" class="py-20 bg-zinc-950 border-t border-zinc-800">
-        <div class="max-w-3xl mx-auto px-4 text-center">
-            <h2 class="text-2xl font-bold uppercase text-white">Зачем это нужно?</h2>
-            <p class="mt-4 text-zinc-400 leading-relaxed">
-                Сайт спроектирован специально для демонстрации возможностей работы с изображениями, адаптивной сетки стилей Tailwind CSS и семантической разметки HTML5. Ни одна обезьяна в процессе разработки не пострадала (хотя, судя по фото, они все равно недовольны).
-            </p>
-        </div>
-    </section>
+        <!-- ВКЛАДКА 2: ПЛАТНЫЕ ФОТО (Сверх-злые обезьяны) -->
+        <section id="premium-gallery" class="tab-content space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-amber-500 mb-2">🔥 Настоящие Яростные Обезьяны (Premium)</h2>
+                <p class="text-gray-400">Эксклюзивный контент высочайшего уровня ярости. Каждое фото стоит <span class="text-amber-400 font-mono">$4.99</span>.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Платная 1 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-red-900/30 group hover:border-red-500/50 transition-all relative">
+                    <div class="absolute top-3 right-3 bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg z-10">PREMIUM</div>
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&q=80&w=600" alt="Крайне злая обезьяна" class="w-full h-full object-cover filter blur-sm group-hover:blur-xs transition duration-500">
+                        <div class="absolute inset-0 bg-gray-950/40 flex items-center justify-center">
+                            <span class="text-4xl">🔒</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Ярость Бабуина</h4>
+                            <p class="text-xs text-amber-400 font-mono font-semibold">$4.99</p>
+                        </div>
+                        <button onclick="buyPhoto(4.99)" class="px-3 py-1.5 bg-amber-500 text-gray-900 text-xs font-black rounded-lg hover:bg-amber-400 transition shadow">Купить</button>
+                    </div>
+                </div>
+                <!-- Платная 2 -->
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-red-900/30 group hover:border-red-500/50 transition-all relative">
+                    <div class="absolute top-3 right-3 bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg z-10">PREMIUM</div>
+                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=600&hue=300" alt="Злой орангутан" class="w-full h-full object-cover filter blur-sm group-hover:blur-xs transition duration-500">
+                        <div class="absolute inset-0 bg-gray-950/40 flex items-center justify-center">
+                            <span class="text-4xl">🔒</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-200">Альфа-Горилла в гневе</h4>
+                            <p class="text-xs text-amber-400 font-mono font-semibold">$4.99</p>
+                        </div>
+                        <button onclick="buyPhoto(4.99)" class="px-3 py-1.5 bg-amber-500 text-gray-900 text-xs font-black rounded-lg hover:bg-amber-400 transition shadow">Купить</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА 3: ПОПОЛНЕНИЕ БАЛАНСА -->
+        <section id="billing" class="tab-content space-y-6">
+            <div class="max-w-md mx-auto bg-gray-800 rounded-3xl border border-gray-700 p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
+                
+                <h2 class="text-2xl font-black text-white mb-1 flex items-center gap-2">
+                    <span>💳</span> Пополнение баланса
+                </h2>
+                <p class="text-sm text-gray-400 mb-6">Средства будут зачислены мгновенно для покупки Premium фото.</p>
+                
+                <div class="bg-gray-950 rounded-2xl p-4 border border-gray-700 mb-6 flex justify-between items-center">
+                    <span class="text-sm font-semibold text-gray-400">Текущий счет:</span>
+                    <span id="form-balance-display" class="text-2xl font-black text-amber-500 font-mono">$0.00</span>
+                </div>
+
+                <form onsubmit="depositMoney(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Выберите или введите сумму ($)</label>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <button type="button" onclick="setAmount(10)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$10</button>
+                            <button type="button" onclick="setAmount(25)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$25</button>
+                            <button type="button" onclick="setAmount(50)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$50</button>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-mono font-bold">$</span>
+                            <input type="number" id="deposit-amount" min="1" step="0.01" required placeholder="Другая сумма" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 pl-8 pr-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Данные карты (Имитация платежа)</label>
+                        <input type="text" placeholder="0000 0000 0000 0000" pattern="[0-9 ]{16,19}" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition mb-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" placeholder="ММ/ГГ" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
+                            <input type="password" placeholder="CVC" maxlength="3" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-gray-900 font-black py-4 rounded-xl transition duration-300 shadow-xl shadow-amber-500/10 active:scale-[0.99]">
+                        Пополнить баланс
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
 
     <!-- Подвал -->
-    <footer class="bg-zinc-950 py-8 border-t border-zinc-900 text-center text-xs text-zinc-600 tracking-wider uppercase">
-        <p>&copy; 2026 Angry Primates Corp. Все права защищены от укусов.</p>
-    </footer>
+    <footer class="bg-gray-950 text-gray-600 text-xs text-center py-6 border-t border-gray-800">
+        <p>© 2026 AngryMonkeys Photo Stock. Все фотографии тщательно отсортированы вручную.</p>
+    </footer >
 
+    <!-- Логика переключения вкладок и симуляции баланса -->
+    <script>
+        let currentBalance = 0.00;
+
+        function updateBalanceUI() {
+            document.getElementById('balance-display').innerText = `$${currentBalance.toFixed(2)}`;
+            document.getElementById('form-balance-display').innerText = `$${currentBalance.toFixed(2)}`;
+        }
+
+        function switchTab(tabId) {
+            // Скрываем весь контент
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Показываем нужный контент
+            document.getElementById(tabId).classList.add('active');
+
+            // Сбрасываем стили кнопок навигации
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-gray-900');
+                btn.classList.add('text-gray-400', 'hover:text-white');
+            });
+            // Подсвечиваем активную
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-gray-400', 'hover:text-white');
+            activeBtn.classList.add('bg-amber-500', 'text-gray-900');
+        }
+
+        function setAmount(val) {
+            document.getElementById('deposit-amount').value = val;
+        }
+
+        function depositMoney(event) {
+            event.preventDefault();
+            const amountInput = document.getElementById('deposit-amount');
+            const amount = parseFloat(amountInput.value);
+            
+            if (amount > 0) {
+                currentBalance += amount;
+                updateBalanceUI();
+                amountInput.value = '';
+                alert(`Успешно! Баланс пополнен на $${amount.toFixed(2)}`);
+            }
+        }
+
+        function buyPhoto(price) {
+            if (currentBalance >= price) {
+                currentBalance -= price;
+                updateBalanceUI();
+                alert('Покупка совершена! Фотография разблокирована и добавлена в ваш личный кабинет.');
+            } else {
+                alert('Недостаточно средств. Пожалуйста, перейдите в раздел баланса и пополните счет.');
+                switchTab('billing');
+            }
+        }
+    </script>
 </body>
 </html>
