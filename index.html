@@ -1,256 +1,385 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Angry Monkeys Premium Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тени на Мокром Асфальте — визуальная новелла</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;600&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; display:flex; justify-content:center; align-items:center;
+    min-height:100vh; font-family:'Inter',sans-serif; overflow:hidden;
+  }
+  #game {
+    width:min(960px, 96vw); height:min(640px, 94vh);
+    background:#12121a; border-radius:16px; overflow:hidden;
+    box-shadow:0 24px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.06);
+    display:flex; flex-direction:column; position:relative;
+  }
+  #scene {
+    flex:1; position:relative; display:flex; align-items:flex-end;
+    background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f0f1a 100%);
+    transition:background 1s ease;
+  }
+  #scene::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 0%, rgba(120,140,200,.15), transparent 60%);
+    pointer-events:none;
+  }
+  .rain {
+    position:absolute; inset:0; pointer-events:none; opacity:.35;
+    background-image:repeating-linear-gradient(105deg, transparent 0 2px, rgba(180,200,255,.12) 2px 3px);
+    animation:rain 0.6s linear infinite;
+  }
+  @keyframes rain { to { background-position:-30px 120px; } }
+  #charLayer {
+    position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-end;
+    pointer-events:none;
+  }
+  .sprite {
+    width:min(320px, 40%); height:78%; margin-bottom:0;
+    border-radius:180px 180px 0 0;
+    background:linear-gradient(180deg, rgba(90,110,160,.5), rgba(30,30,50,.9));
+    border:1px solid rgba(160,180,230,.18);
+    box-shadow:0 -10px 60px rgba(80,110,180,.25), inset 0 0 60px rgba(0,0,0,.5);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding-top:14%; font-family:'Playfair Display',serif; font-size:2.6rem;
+    color:rgba(220,230,255,.85); text-shadow:0 4px 20px rgba(0,0,0,.6);
+    opacity:0; transform:translateY(30px); transition:opacity .5s, transform .5s;
+    position:absolute; bottom:0;
+  }
+  .sprite.show { opacity:1; transform:translateY(0); }
+  .sprite.left { left:8%; }
+  .sprite.right { right:8%; }
+  .sprite.speaking { filter:brightness(1.15); border-color:rgba(200,215,255,.4); }
+  #ui {
+    background:linear-gradient(180deg, rgba(18,18,26,.95), #0d0d14);
+    border-top:1px solid rgba(255,255,255,.07);
+    padding:20px 28px 22px; min-height:200px; display:flex; flex-direction:column;
+  }
+  #speaker {
+    font-family:'Playfair Display',serif; font-size:1.05rem; letter-spacing:.08em;
+    text-transform:uppercase; color:#c9a86a; margin-bottom:8px; min-height:1.3em;
+  }
+  #text {
+    font-size:1.02rem; line-height:1.65; color:#d8dce8; flex:1;
+    font-weight:300; max-height:110px; overflow-y:auto; padding-right:6px;
+  }
+  #text::-webkit-scrollbar { width:4px; }
+  #text::-webkit-scrollbar-thumb { background:#333a50; border-radius:2px; }
+  #choices { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .choice {
+    background:rgba(255,255,255,.04); border:1px solid rgba(200,215,255,.15);
+    color:#cfd6e8; padding:10px 16px; border-radius:8px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:.94rem; text-align:left;
+    transition:.2s; font-weight:400;
+  }
+  .choice:hover { background:rgba(120,150,220,.15); border-color:rgba(160,190,255,.45); transform:translateX(4px); }
+  #nextHint {
+    position:absolute; bottom:12px; right:24px; font-size:.75rem; color:#5a6380;
+    letter-spacing:.1em; text-transform:uppercase; animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  #endScreen {
+    position:absolute; inset:0; background:rgba(6,6,12,.96); display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px; z-index:10;
+  }
+  #endScreen h2 { font-family:'Playfair Display',serif; font-size:2rem; color:#c9a86a; margin-bottom:18px; font-weight:600; }
+  #endScreen p { color:#a8b0c8; max-width:520px; line-height:1.7; font-weight:300; margin-bottom:28px; }
+  #endScreen button {
+    background:transparent; border:1px solid #c9a86a; color:#c9a86a;
+    padding:12px 32px; border-radius:30px; cursor:pointer; font-size:.9rem;
+    letter-spacing:.1em; text-transform:uppercase; transition:.25s;
+  }
+  #endScreen button:hover { background:#c9a86a; color:#0a0a0f; }
+  #stats { position:absolute; top:14px; left:18px; font-size:.72rem; color:#4a5270; letter-spacing:.12em; text-transform:uppercase; z-index:5; }
+</style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col">
+<body>
+<div id="game">
+  <div id="scene">
+    <div class="rain"></div>
+    <div id="charLayer"></div>
+    <div id="stats">Тени на мокром асфальте</div>
+  </div>
+  <div id="ui">
+    <div id="speaker"></div>
+    <div id="text"></div>
+    <div id="choices"></div>
+  </div>
+  <div id="nextHint">нажмите, чтобы продолжить</div>
+  <div id="endScreen">
+    <h2 id="endTitle"></h2>
+    <p id="endText"></p>
+    <button onclick="location.reload()">Начать заново</button>
+  </div>
+</div>
 
-    <!-- Навигация -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <span class="text-3xl">🦧</span>
-                <h1 class="text-2xl font-black tracking-wider text-amber-500 uppercase">AngryMonkeys</h1>
-            </div>
-            <nav class="flex space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-700">
-                <button onclick="switchTab('free-gallery')" id="btn-free-gallery" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 bg-amber-500 text-gray-900">
-                    Free Фото
-                </button>
-                <button onclick="switchTab('premium-gallery')" id="btn-premium-gallery" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white">
-                    Premium VIP
-                </button>
-                <button onclick="switchTab('billing')" id="btn-billing" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white flex items-center gap-1">
-                    💳 Баланс: <span id="balance-display" class="text-amber-400 font-mono">$0.00</span>
-                </button>
-            </nav>
-        </div>
-    </header>
+<script>
+// ===== ПЕРСОНАЖИ =====
+const CHARS = {
+  detective: { name:'Детектив Ворон', letter:'В', side:'left' },
+  elena:     { name:'Елена', letter:'Е', side:'right' },   // владелица клуба
+  mira:      { name:'Мира', letter:'М', side:'right' }      // аспирантка-программистка
+};
 
-    <!-- Основной контент -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8">
-        
-        <!-- ВКЛАДКА 1: БЕСПЛАТНЫЕ ФОТО (Простые обезьянки) -->
-        <section id="free-gallery" class="tab-content active space-y-6">
-            <div class="text-center max-w-2xl mx-auto">
-                <h2 class="text-3xl font-extrabold text-white mb-2">Обычные Обезьянки</h2>
-                <p class="text-gray-400">Каталог стандартных приматов в их естественной среде. Доступно бесплатно.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Обезьяна 1 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=600" alt="Обычная обезьяна" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Макака обыкновенная</h4>
-                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
-                        </div>
-                        <a href="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
-                    </div>
-                </div>
-                <!-- Обезьяна 2 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1570288685280-7802a8f8c4b3?auto=format&fit=crop&q=80&w=600" alt="Обезьяна сидит" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Любопытный шимпанзе</h4>
-                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
-                        </div>
-                        <a href="https://images.unsplash.com/photo-1570288685280-7802a8f8c4b3?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
-                    </div>
-                </div>
-                <!-- Обезьяна 3 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=600" alt="Маленькая обезьяна" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Спокойный примат</h4>
-                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
-                        </div>
-                        <a href="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
-                    </div>
-                </div>
-                <!-- Обезьяна 4 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 group hover:border-amber-500/50 transition-all">
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=600" alt="Шимпанзе портрет" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Молодой шимпанзе</h4>
-                            <p class="text-xs text-green-400 font-semibold">Бесплатно</p>
-                        </div>
-                        <a href="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&q=80&w=1200" target="_blank" class="px-3 py-1.5 bg-gray-700 text-xs font-bold rounded-lg hover:bg-gray-600 transition">Скачать</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+// ===== СЮЖЕТ =====
+// Узел: { speaker, text, show:[charId], choices:[{text, next, effect}] }
+// effect: { elena:+1, mira:+1, clue:'...' }
+const story = {};
 
-        <!-- ВКЛАДКА 2: ПЛАТНЫЕ ФОТО (Сверх-злые обезьяны) -->
-        <section id="premium-gallery" class="tab-content space-y-6">
-            <div class="text-center max-w-2xl mx-auto">
-                <h2 class="text-3xl font-extrabold text-amber-500 mb-2">🔥 Настоящие Яростные Обезьяны (Premium)</h2>
-                <p class="text-gray-400">Эксклюзивный контент высочайшего уровня ярости. Каждое фото стоит <span class="text-amber-400 font-mono">$4.99</span>.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Платная 1 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-red-900/30 group hover:border-red-500/50 transition-all relative">
-                    <div class="absolute top-3 right-3 bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg z-10">PREMIUM</div>
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&q=80&w=600" alt="Крайне злая обезьяна" class="w-full h-full object-cover filter blur-sm group-hover:blur-xs transition duration-500">
-                        <div class="absolute inset-0 bg-gray-950/40 flex items-center justify-center">
-                            <span class="text-4xl">🔒</span>
-                        </div>
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Ярость Бабуина</h4>
-                            <p class="text-xs text-amber-400 font-mono font-semibold">$4.99</p>
-                        </div>
-                        <button onclick="buyPhoto(4.99)" class="px-3 py-1.5 bg-amber-500 text-gray-900 text-xs font-black rounded-lg hover:bg-amber-400 transition shadow">Купить</button>
-                    </div>
-                </div>
-                <!-- Платная 2 -->
-                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-red-900/30 group hover:border-red-500/50 transition-all relative">
-                    <div class="absolute top-3 right-3 bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg z-10">PREMIUM</div>
-                    <div class="aspect-square bg-gray-950 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&q=80&w=600&hue=300" alt="Злой орангутан" class="w-full h-full object-cover filter blur-sm group-hover:blur-xs transition duration-500">
-                        <div class="absolute inset-0 bg-gray-950/40 flex items-center justify-center">
-                            <span class="text-4xl">🔒</span>
-                        </div>
-                    </div>
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-200">Альфа-Горилла в гневе</h4>
-                            <p class="text-xs text-amber-400 font-mono font-semibold">$4.99</p>
-                        </div>
-                        <button onclick="buyPhoto(4.99)" class="px-3 py-1.5 bg-amber-500 text-gray-900 text-xs font-black rounded-lg hover:bg-amber-400 transition shadow">Купить</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+story.start = {
+  speaker:'Детектив Ворон',
+  text:'Дождь барабанит по стеклу третий день подряд. В моём офисе пахнет мокрым пальто и остывшим кофе. На столе — папка: Алиса Корн, студентка третьего курса, пропала пять дней назад. Последний раз её видели у клуба «Вельвет».',
+  show:['detective'],
+  choices:[
+    { text:'Начать с хозяйки клуба — Елены.', next:'elena1' },
+    { text:'Сначала найти аспирантку, которая видела Алису последней — Миру.', next:'mira1' }
+  ]
+};
 
-        <!-- ВКЛАДКА 3: ПОПОЛНЕНИЕ БАЛАНСА -->
-        <section id="billing" class="tab-content space-y-6">
-            <div class="max-w-md mx-auto bg-gray-800 rounded-3xl border border-gray-700 p-6 md:p-8 shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
-                
-                <h2 class="text-2xl font-black text-white mb-1 flex items-center gap-2">
-                    <span>💳</span> Пополнение баланса
-                </h2>
-                <p class="text-sm text-gray-400 mb-6">Средства будут зачислены мгновенно для покупки Premium фото.</p>
-                
-                <div class="bg-gray-950 rounded-2xl p-4 border border-gray-700 mb-6 flex justify-between items-center">
-                    <span class="text-sm font-semibold text-gray-400">Текущий счет:</span>
-                    <span id="form-balance-display" class="text-2xl font-black text-amber-500 font-mono">$0.00</span>
-                </div>
+// --- Ветка Елены ---
+story.elena1 = {
+  speaker:'Елена',
+  text:'«Вельвет» — моё королевство. Елена сидит в багровом кресле, скрестив руки. «Полиция уже приходила. Алиса была здесь в ту ночь, пила с друзьями. Ушла около полуночи. Одна. Больше я ничего не знаю, детектив».',
+  show:['detective','elena'],
+  choices:[
+    { text:'— А кто ещё был в ту ночь?', next:'elena2' },
+    { text:'— Вы выглядите уставшей. Всё в порядке?', next:'elena_romance', effect:{elena:1} }
+  ]
+};
 
-                <form onsubmit="depositMoney(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Выберите или введите сумму ($)</label>
-                        <div class="grid grid-cols-3 gap-2 mb-3">
-                            <button type="button" onclick="setAmount(10)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$10</button>
-                            <button type="button" onclick="setAmount(25)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$25</button>
-                            <button type="button" onclick="setAmount(50)" class="py-2.5 bg-gray-900 border border-gray-700 rounded-xl font-mono hover:border-amber-500 text-sm font-bold transition">$50</button>
-                        </div>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-mono font-bold">$</span>
-                            <input type="number" id="deposit-amount" min="1" step="0.01" required placeholder="Другая сумма" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 pl-8 pr-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
-                        </div>
-                    </div>
+story.elena2 = {
+  speaker:'Елена',
+  text:'«Много кто. Бармен, диджей, охранник... и эта аспирантка, Мира. Она часто торчит здесь — что-то пишет в ноутбуке до утра. Странная девушка». Елена отводит взгляд. Слишком быстро, для человека, которому нечего скрывать.',
+  show:['detective','elena'],
+  choices:[
+    { text:'— Спасибо. Я проверю Миру.', next:'mira1', effect:{clue:'Елена заметила Миру в клубе'} },
+    { text:'— Что вы скрываете, Елена?', next:'elena_press', effect:{elena:-1} }
+  ]
+};
 
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Данные карты (Имитация платежа)</label>
-                        <input type="text" placeholder="0000 0000 0000 0000" pattern="[0-9 ]{16,19}" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition mb-3">
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" placeholder="ММ/ГГ" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
-                            <input type="password" placeholder="CVC" maxlength="3" class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 px-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-amber-500 transition">
-                        </div>
-                    </div>
+story.elena_press = {
+  speaker:'Елена',
+  text:'Она усмехается. «Все скрывают что-то, детектив. Даже вы». В её голосе — вызов. А в глазах — что-то, похожее на страх.',
+  show:['detective','elena'],
+  choices:[
+    { text:'— Я вернусь. И проверю Миру.', next:'mira1' }
+  ]
+};
 
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-gray-900 font-black py-4 rounded-xl transition duration-300 shadow-xl shadow-amber-500/10 active:scale-[0.99]">
-                        Пополнить баланс
-                    </button>
-                </form>
-            </div>
-        </section>
+story.elena_romance = {
+  speaker:'Елена',
+  text:'Её плечи чуть расслабляются. «Дождь. Он выматывает». Пауза. «Знаете, детектив, вы первый, кто спросил о моём состоянии, а не о пропавшей девочке. Оставьте телефон. Если вспомню что-то — напишу». Её пальцы задерживаются на вашей визитке на секунду дольше, чем нужно.',
+  show:['detective','elena'],
+  choices:[
+    { text:'— Тогда начнём с Миры.', next:'mira1', effect:{clue:'Елена обещала помочь'} }
+  ]
+};
 
-    </main>
+// --- Ветка Миры ---
+story.mira1 = {
+  speaker:'Мира',
+  text:'Мира сидит в кофейне напротив. Перед ней — ноутбук, чашка чая и стопка распечаток. «Вы про Алису? Да, я видела её. Но не то, что говорят копы». Она понижает голос. «Она собиралась разоблачить кое-кого. И я помогала ей с данными».',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Кого она собиралась разоблачить?', next:'mira2' },
+    { text:'— Почему вы не сказали это полиции?', next:'mira_press', effect:{mira:1} }
+  ]
+};
 
-    <!-- Подвал -->
-    <footer class="bg-gray-950 text-gray-600 text-xs text-center py-6 border-t border-gray-800">
-        <p>© 2026 AngryMonkeys Photo Stock. Все фотографии тщательно отсортированы вручную.</p>
-    </footer >
+story.mira2 = {
+  speaker:'Мира',
+  text:'Она смотрит в экран. «Елена. Владелица клуба. Алиса нашла в её бухгалтерии что-то про трафик, но доказательств не было. В ночь исчезновения Алиса шла к Елене с флешкой. И не дошла».',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Где эта флешка сейчас?', next:'mira_flash', effect:{clue:'Мотив Елены'} },
+    { text:'— Вы рисковали, помогая ей.', next:'mira_romance', effect:{mira:1} }
+  ]
+};
 
-    <!-- Логика переключения вкладок и симуляции баланса -->
-    <script>
-        let currentBalance = 0.00;
+story.mira_press = {
+  speaker:'Мира',
+  text:'«Потому что мне не поверят. Я аспирантка, которая пишет диссертацию про кибербезопасность и торчит в клубах. А Елена — уважаемая бизнесвумен». Она сжимает чашку. «Я пыталась найти Алису сама. И, кажется, нашла зацепку».',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Покажите.', next:'mira2', effect:{clue:'Мира нашла зацепку'} }
+  ]
+};
 
-        function updateBalanceUI() {
-            document.getElementById('balance-display').innerText = `$${currentBalance.toFixed(2)}`;
-            document.getElementById('form-balance-display').innerText = `$${currentBalance.toFixed(2)}`;
-        }
+story.mira_romance = {
+  speaker:'Мира',
+  text:'Она впервые улыбается. Тихо, уголком губ. «Она была моей лучшей подругой. Я не могла иначе». Пауза. «Знаете, вы не похожи на детектива. Слишком... настоящий». Щёки выдают её с головой.',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Давайте найдём её вместе. Где флешка?', next:'mira_flash', effect:{clue:'Мотив Елены'} }
+  ]
+};
 
-        function switchTab(tabId) {
-            // Скрываем весь контент
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Показываем нужный контент
-            document.getElementById(tabId).classList.add('active');
+story.mira_flash = {
+  speaker:'Мира',
+  text:'«Флешка у меня. Алиса оставила её в моём почтовом ящике перед уходом. Но данные зашифрованы. Мне нужен доступ к серверу клуба». Она смотрит на вас. «Или свидетель. Или признание».',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Идём в «Вельвет». Поговорим с Еленой.', next:'finale_elena' },
+    { text:'— Сначала расшифруем флешку.', next:'finale_mira' }
+  ]
+};
 
-            // Сбрасываем стили кнопок навигации
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-amber-500', 'text-gray-900');
-                btn.classList.add('text-gray-400', 'hover:text-white');
-            });
-            // Подсвечиваем активную
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            activeBtn.classList.remove('text-gray-400', 'hover:text-white');
-            activeBtn.classList.add('bg-amber-500', 'text-gray-900');
-        }
+// --- Финалы ---
+story.finale_elena = {
+  speaker:'Елена',
+  text:'Вы возвращаетесь в клуб вместе с Мирой. Елена ждёт у бара. «Я знала, что вы вернётесь». Пауза. «Ладно. Алиса жива. Я спрятала её — потому что тот, кто её искал, опаснее меня». В дверях появляется силуэт.',
+  show:['detective','elena'],
+  choices:[
+    { text:'— Кто это?', next:'end_truth' }
+  ]
+};
 
-        function setAmount(val) {
-            document.getElementById('deposit-amount').value = val;
-        }
+story.finale_mira = {
+  speaker:'Мира',
+  text:'Вы взламываете сервер через гостевой Wi-Fi клуба. Файлы открываются. Это переписка. Алиса продала данные не Елене — она пыталась защитить Миру. В последнем сообщении: «Если я исчезну, не ищи меня. Это опасно».',
+  show:['detective','mira'],
+  choices:[
+    { text:'— Она вас защищала.', next:'end_sacrifice' }
+  ]
+};
 
-        function depositMoney(event) {
-            event.preventDefault();
-            const amountInput = document.getElementById('deposit-amount');
-            const amount = parseFloat(amountInput.value);
-            
-            if (amount > 0) {
-                currentBalance += amount;
-                updateBalanceUI();
-                amountInput.value = '';
-                alert(`Успешно! Баланс пополнен на $${amount.toFixed(2)}`);
-            }
-        }
+story.end_truth = {
+  speaker:'',
+  text:'',
+  end:{ title:'Концовка: Правда у всех своя', text:'За дверью — бывший партнёр Елены, тот, кому принадлежали данные. Алиса даёт показания, клуб закрывают, но Елена избегает тюрьмы. Мира остаётся рядом. Вы пишете отчёт в три часа ночи. Дождь наконец стихает.' }
+};
 
-        function buyPhoto(price) {
-            if (currentBalance >= price) {
-                currentBalance -= price;
-                updateBalanceUI();
-                alert('Покупка совершена! Фотография разблокирована и добавлена в ваш личный кабинет.');
-            } else {
-                alert('Недостаточно средств. Пожалуйста, перейдите в раздел баланса и пополните счет.');
-                switchTab('billing');
-            }
-        }
-    </script>
+story.end_sacrifice = {
+  speaker:'',
+  text:'',
+  end:{ title:'Концовка: Зашифрованная жертва', text:'Вы находите Алису в загородном доме. Она спряталась сама, чтобы выиграть время. Мира плачет у неё на плече. Вы закрываете дело и впервые за месяц спите спокойно. На столе — визитка Елены. Вы её не выбрасываете.' }
+};
+
+// ===== ДВИЖОК =====
+const sceneEl = document.getElementById('scene');
+const charLayer = document.getElementById('charLayer');
+const speakerEl = document.getElementById('speaker');
+const textEl = document.getElementById('text');
+const choicesEl = document.getElementById('choices');
+const nextHint = document.getElementById('nextHint');
+const endScreen = document.getElementById('endScreen');
+const sprites = {};
+let current = null;
+let typingTimer = null;
+let fullText = '';
+let typed = false;
+let stats = { elena:0, mira:0, clues:[] };
+
+function renderSprites(show) {
+  // убрать отсутствующих
+  Object.keys(sprites).forEach(id => {
+    if (!show.includes(id)) { sprites[id].classList.remove('show'); }
+  });
+  // добавить/показать
+  show.forEach(id => {
+    if (!sprites[id]) {
+      const c = CHARS[id];
+      const el = document.createElement('div');
+      el.className = 'sprite ' + c.side;
+      el.textContent = c.letter;
+      el.dataset.id = id;
+      charLayer.appendChild(el);
+      sprites[id] = el;
+      requestAnimationFrame(() => setTimeout(() => el.classList.add('show'), 20));
+    } else {
+      sprites[id].classList.add('show');
+    }
+  });
+}
+
+function highlightSpeaker(speakerName) {
+  Object.values(sprites).forEach(s => s.classList.remove('speaking'));
+  Object.entries(CHARS).forEach(([id, c]) => {
+    if (c.name === speakerName && sprites[id]) sprites[id].classList.add('speaking');
+  });
+}
+
+function typeText(text) {
+  clearInterval(typingTimer);
+  fullText = text;
+  typed = false;
+  textEl.textContent = '';
+  let i = 0;
+  typingTimer = setInterval(() => {
+    textEl.textContent = fullText.slice(0, ++i);
+    if (i >= fullText.length) { clearInterval(typingTimer); typed = true; }
+  }, 18);
+}
+
+function showNode(id) {
+  const node = story[id];
+  if (!node) return;
+  current = node;
+
+  if (node.end) {
+    endScreen.style.display = 'flex';
+    document.getElementById('endTitle').textContent = node.end.title;
+    document.getElementById('endText').textContent = node.end.text;
+    return;
+  }
+
+  if (node.effect) applyEffect(node.effect);
+
+  renderSprites(node.show || []);
+  speakerEl.textContent = node.speaker || '';
+  highlightSpeaker(node.speaker);
+  typeText(node.text || '');
+  choicesEl.innerHTML = '';
+  nextHint.style.display = 'block';
+
+  // Показываем выборы сразу (но текст печатается)
+  (node.choices || []).forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = ch.text;
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      if (!typed) { finishTyping(); return; } // если не дочитали — сначала дочитать
+      if (ch.effect) applyEffect(ch.effect);
+      showNode(ch.next);
+    };
+    choicesEl.appendChild(btn);
+  });
+}
+
+function finishTyping() {
+  clearInterval(typingTimer);
+  textEl.textContent = fullText;
+  typed = true;
+}
+
+function applyEffect(eff) {
+  if (eff.elena) stats.elena += eff.elena;
+  if (eff.mira) stats.mira += eff.mira;
+  if (eff.clue && !stats.clues.includes(eff.clue)) stats.clues.push(eff.clue);
+  updateStatsBar();
+}
+
+function updateStatsBar() {
+  const parts = [];
+  if (stats.elena) parts.push('Елена ' + (stats.elena>0?'+':'') + stats.elena);
+  if (stats.mira) parts.push('Мира ' + (stats.mira>0?'+':'') + stats.mira);
+  if (stats.clues.length) parts.push('улик: ' + stats.clues.length);
+  document.getElementById('stats').textContent = parts.length
+    ? 'Тени на мокром асфальте · ' + parts.join(' · ')
+    : 'Тени на мокром асфальте';
+}
+
+// клик по сцене/тексту — дочитать или продолжить
+sceneEl.addEventListener('click', () => { if (!typed) finishTyping(); });
+textEl.addEventListener('click', (e) => { e.stopPropagation(); if (!typed) finishTyping(); });
+
+// старт
+showNode('start');
+</script>
 </body>
 </html>
