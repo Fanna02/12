@@ -7,94 +7,33 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;600&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background:#0a0a0f; display:flex; justify-content:center; align-items:center;
-    min-height:100vh; font-family:'Inter',sans-serif; overflow:hidden;
-  }
-  #game {
-    width:min(960px, 96vw); height:min(640px, 94vh);
-    background:#12121a; border-radius:16px; overflow:hidden;
-    box-shadow:0 24px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.06);
-    display:flex; flex-direction:column; position:relative;
-  }
-  #scene {
-    flex:1; position:relative; display:flex; align-items:flex-end;
-    background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f0f1a 100%);
-    transition:background 1s ease;
-  }
-  #scene::before {
-    content:''; position:absolute; inset:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(120,140,200,.15), transparent 60%);
-    pointer-events:none;
-  }
-  .rain {
-    position:absolute; inset:0; pointer-events:none; opacity:.35;
-    background-image:repeating-linear-gradient(105deg, transparent 0 2px, rgba(180,200,255,.12) 2px 3px);
-    animation:rain 0.6s linear infinite;
-  }
+  body { background:#0a0a0f; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Inter',sans-serif; overflow:hidden; }
+  #game { width:min(960px,96vw); height:min(640px,94vh); background:#12121a; border-radius:16px; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06); display:flex; flex-direction:column; position:relative; }
+  #scene { flex:1; position:relative; display:flex; align-items:flex-end; background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f0f1a 100%); transition:background 1s ease; }
+  #scene::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(120,140,200,.15),transparent 60%); pointer-events:none; }
+  .rain { position:absolute; inset:0; pointer-events:none; opacity:.35; background-image:repeating-linear-gradient(105deg,transparent 0 2px,rgba(180,200,255,.12) 2px 3px); animation:rain .6s linear infinite; }
   @keyframes rain { to { background-position:-30px 120px; } }
-  #charLayer {
-    position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-end;
-    pointer-events:none;
-  }
-  .sprite {
-    width:min(320px, 40%); height:78%; margin-bottom:0;
-    border-radius:180px 180px 0 0;
-    background:linear-gradient(180deg, rgba(90,110,160,.5), rgba(30,30,50,.9));
-    border:1px solid rgba(160,180,230,.18);
-    box-shadow:0 -10px 60px rgba(80,110,180,.25), inset 0 0 60px rgba(0,0,0,.5);
-    display:flex; align-items:flex-start; justify-content:center;
-    padding-top:14%; font-family:'Playfair Display',serif; font-size:2.6rem;
-    color:rgba(220,230,255,.85); text-shadow:0 4px 20px rgba(0,0,0,.6);
-    opacity:0; transform:translateY(30px); transition:opacity .5s, transform .5s;
-    position:absolute; bottom:0;
-  }
+  #charLayer { position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-end; pointer-events:none; }
+  .sprite { position:absolute; bottom:0; height:82%; opacity:0; transform:translateY(30px); transition:opacity .5s,transform .5s,filter .3s; filter:drop-shadow(0 0 40px rgba(80,110,180,.3)); }
   .sprite.show { opacity:1; transform:translateY(0); }
-  .sprite.left { left:8%; }
-  .sprite.right { right:8%; }
-  .sprite.speaking { filter:brightness(1.15); border-color:rgba(200,215,255,.4); }
-  #ui {
-    background:linear-gradient(180deg, rgba(18,18,26,.95), #0d0d14);
-    border-top:1px solid rgba(255,255,255,.07);
-    padding:20px 28px 22px; min-height:200px; display:flex; flex-direction:column;
-  }
-  #speaker {
-    font-family:'Playfair Display',serif; font-size:1.05rem; letter-spacing:.08em;
-    text-transform:uppercase; color:#c9a86a; margin-bottom:8px; min-height:1.3em;
-  }
-  #text {
-    font-size:1.02rem; line-height:1.65; color:#d8dce8; flex:1;
-    font-weight:300; max-height:110px; overflow-y:auto; padding-right:6px;
-  }
+  .sprite.left { left:4%; }
+  .sprite.right { right:4%; }
+  .sprite.dim { filter:brightness(.55) drop-shadow(0 0 20px rgba(80,110,180,.15)); }
+  .sprite svg { height:100%; width:auto; display:block; }
+  #ui { background:linear-gradient(180deg,rgba(18,18,26,.95),#0d0d14); border-top:1px solid rgba(255,255,255,.07); padding:20px 28px 22px; min-height:200px; display:flex; flex-direction:column; }
+  #speaker { font-family:'Playfair Display',serif; font-size:1.05rem; letter-spacing:.08em; text-transform:uppercase; color:#c9a86a; margin-bottom:8px; min-height:1.3em; }
+  #text { font-size:1.02rem; line-height:1.65; color:#d8dce8; flex:1; font-weight:300; max-height:110px; overflow-y:auto; padding-right:6px; }
   #text::-webkit-scrollbar { width:4px; }
   #text::-webkit-scrollbar-thumb { background:#333a50; border-radius:2px; }
   #choices { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-  .choice {
-    background:rgba(255,255,255,.04); border:1px solid rgba(200,215,255,.15);
-    color:#cfd6e8; padding:10px 16px; border-radius:8px; cursor:pointer;
-    font-family:'Inter',sans-serif; font-size:.94rem; text-align:left;
-    transition:.2s; font-weight:400;
-  }
+  .choice { background:rgba(255,255,255,.04); border:1px solid rgba(200,215,255,.15); color:#cfd6e8; padding:10px 16px; border-radius:8px; cursor:pointer; font-family:'Inter',sans-serif; font-size:.94rem; text-align:left; transition:.2s; font-weight:400; }
   .choice:hover { background:rgba(120,150,220,.15); border-color:rgba(160,190,255,.45); transform:translateX(4px); }
-  #nextHint {
-    position:absolute; bottom:12px; right:24px; font-size:.75rem; color:#5a6380;
-    letter-spacing:.1em; text-transform:uppercase; animation:pulse 1.6s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
-  #endScreen {
-    position:absolute; inset:0; background:rgba(6,6,12,.96); display:none;
-    flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:40px; z-index:10;
-  }
+  #stats { position:absolute; top:14px; left:18px; font-size:.72rem; color:#4a5270; letter-spacing:.12em; text-transform:uppercase; z-index:5; }
+  #endScreen { position:absolute; inset:0; background:rgba(6,6,12,.96); display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px; z-index:10; }
   #endScreen h2 { font-family:'Playfair Display',serif; font-size:2rem; color:#c9a86a; margin-bottom:18px; font-weight:600; }
   #endScreen p { color:#a8b0c8; max-width:520px; line-height:1.7; font-weight:300; margin-bottom:28px; }
-  #endScreen button {
-    background:transparent; border:1px solid #c9a86a; color:#c9a86a;
-    padding:12px 32px; border-radius:30px; cursor:pointer; font-size:.9rem;
-    letter-spacing:.1em; text-transform:uppercase; transition:.25s;
-  }
+  #endScreen button { background:transparent; border:1px solid #c9a86a; color:#c9a86a; padding:12px 32px; border-radius:30px; cursor:pointer; font-size:.9rem; letter-spacing:.1em; text-transform:uppercase; transition:.25s; }
   #endScreen button:hover { background:#c9a86a; color:#0a0a0f; }
-  #stats { position:absolute; top:14px; left:18px; font-size:.72rem; color:#4a5270; letter-spacing:.12em; text-transform:uppercase; z-index:5; }
 </style>
 </head>
 <body>
@@ -109,7 +48,6 @@
     <div id="text"></div>
     <div id="choices"></div>
   </div>
-  <div id="nextHint">нажмите, чтобы продолжить</div>
   <div id="endScreen">
     <h2 id="endTitle"></h2>
     <p id="endText"></p>
@@ -118,33 +56,172 @@
 </div>
 
 <script>
+// ===== SVG-ПЕРСОНАЖИ =====
+// Каждый персонаж — функция(pose, mood) возвращает SVG-строку.
+// pose: 'idle' | 'cross' | 'laptop' ; mood: 'neutral' | 'smile' | 'angry' | 'sad'
+
+const PALETTE = {
+  detective:{ coat:'#2b3348', hat:'#1b1f2e', skin:'#e8c9a8', hair:'#3a2a22', accent:'#c9a86a' },
+  elena:{ dress:'#7a1f2b', hair:'#2a1a1a', skin:'#f0d0b0', accent:'#e8b8c0' },
+  mira:{ hoodie:'#3a4a5a', hair:'#5a3a2a', skin:'#f2d6b8', accent:'#8ab4d8' }
+};
+
+function face(mood, cx, cy, s) {
+  // глаза и рот в зависимости от настроения
+  let eyes, mouth;
+  if (mood === 'smile') {
+    eyes = `<path d="M${cx-14} ${cy} q5 -6 10 0" stroke="#222" stroke-width="2" fill="none"/>
+            <path d="M${cx+6} ${cy} q5 -6 10 0" stroke="#222" stroke-width="2" fill="none"/>`;
+    mouth = `<path d="M${cx-8} ${cy+16} q8 7 16 0" stroke="#a35" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  } else if (mood === 'angry') {
+    eyes = `<line x1="${cx-16}" y1="${cy-4}" x2="${cx-6}" y2="${cy+1}" stroke="#222" stroke-width="2.5"/>
+            <line x1="${cx+2}" y1="${cy-4}" x2="${cx+12}" y2="${cy+1}" stroke="#222" stroke-width="2.5"/>
+            <circle cx="${cx-8}" cy="${cy+4}" r="2.5" fill="#222"/>
+            <circle cx="${cx+8}" cy="${cy+4}" r="2.5" fill="#222"/>`;
+    mouth = `<path d="M${cx-8} ${cy+18} q8 -5 16 0" stroke="#a35" stroke-width="2.5" fill="none"/>`;
+  } else if (mood === 'sad') {
+    eyes = `<circle cx="${cx-8}" cy="${cy+2}" r="2.8" fill="#222"/>
+            <circle cx="${cx+8}" cy="${cy+2}" r="2.8" fill="#222"/>
+            <path d="M${cx-14} ${cy-6} q6 -3 10 0" stroke="#222" stroke-width="2" fill="none"/>`;
+    mouth = `<path d="M${cx-7} ${cy+17} q7 5 14 0" stroke="#a35" stroke-width="2.5" fill="none"/>`;
+  } else {
+    eyes = `<circle cx="${cx-8}" cy="${cy+2}" r="3" fill="#222"/>
+            <circle cx="${cx+8}" cy="${cy+2}" r="3" fill="#222"/>`;
+    mouth = `<line x1="${cx-6}" y1="${cy+16}" x2="${cx+6}" y2="${cy+16}" stroke="#a35" stroke-width="2.5" stroke-linecap="round"/>`;
+  }
+  return eyes + mouth;
+}
+
+function detectiveSVG(mood='neutral') {
+  return `<svg viewBox="0 0 220 520" xmlns="http://www.w3.org/2000/svg">
+    <!-- плащ -->
+    <path d="M60 220 Q55 340 50 520 L170 520 Q165 340 160 220 Z" fill="${PALETTE.detective.coat}"/>
+    <path d="M110 230 L110 520" stroke="#1b1f2e" stroke-width="3"/>
+    <path d="M60 250 L90 270 L110 250 L130 270 L160 250" stroke="#1b1f2e" stroke-width="2" fill="none"/>
+    <!-- воротник -->
+    <path d="M75 200 L110 250 L145 200 L135 190 L110 220 L85 190 Z" fill="#1b1f2e"/>
+    <!-- шея -->
+    <rect x="98" y="170" width="24" height="40" fill="${PALETTE.detective.skin}"/>
+    <!-- голова -->
+    <ellipse cx="110" cy="130" rx="42" ry="50" fill="${PALETTE.detective.skin}"/>
+    <!-- волосы -->
+    <path d="M68 120 Q70 70 110 68 Q150 70 152 120 Q145 95 110 92 Q75 95 68 120 Z" fill="${PALETTE.detective.hair}"/>
+    <!-- шляпа -->
+    <ellipse cx="110" cy="86" rx="62" ry="14" fill="${PALETTE.detective.hat}"/>
+    <path d="M78 86 Q78 40 110 38 Q142 40 142 86 Z" fill="${PALETTE.detective.hat}"/>
+    <rect x="76" y="80" width="68" height="7" fill="#0e111a"/>
+    <!-- лицо -->
+    ${face(mood, 110, 130)}
+    <!-- нос -->
+    <path d="M110 132 L106 145 L114 145" stroke="#c9a888" stroke-width="1.8" fill="none"/>
+    <!-- сигара/акцент -->
+    <rect x="140" y="148" width="26" height="5" rx="2" fill="#c9a86a"/>
+    <circle cx="168" cy="150" r="3" fill="#ff6b3a" opacity=".9"/>
+  </svg>`;
+}
+
+function elenaSVG(pose='idle', mood='neutral') {
+  // pose: idle | cross (руки скрещены)
+  const arms = pose === 'cross'
+    ? `<path d="M58 250 Q40 300 70 330 Q110 350 150 330 Q180 300 162 250" stroke="${PALETTE.elena.skin}" stroke-width="18" fill="none" stroke-linecap="round"/>
+       <path d="M70 330 L150 330" stroke="${PALETTE.elena.skin}" stroke-width="16" stroke-linecap="round"/>`
+    : `<path d="M60 250 Q45 360 55 470" stroke="${PALETTE.elena.skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+       <path d="M160 250 Q175 360 165 470" stroke="${PALETTE.elena.skin}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+  return `<svg viewBox="0 0 220 520" xmlns="http://www.w3.org/2000/svg">
+    <!-- платье -->
+    <path d="M70 230 Q50 380 40 520 L180 520 Q170 380 150 230 Z" fill="${PALETTE.elena.dress}"/>
+    <path d="M70 230 Q110 250 150 230 L145 300 Q110 315 75 300 Z" fill="#5a1420"/>
+    <!-- бусы -->
+    <path d="M85 215 Q110 245 135 215" stroke="${PALETTE.elena.accent}" stroke-width="3" fill="none"/>
+    ${arms}
+    <!-- шея -->
+    <rect x="98" y="170" width="24" height="40" fill="${PALETTE.elena.skin}"/>
+    <!-- волосы сзади -->
+    <path d="M55 110 Q45 200 60 280 L80 280 Q65 200 70 120 Z" fill="${PALETTE.elena.hair}"/>
+    <path d="M165 110 Q175 200 160 280 L140 280 Q155 200 150 120 Z" fill="${PALETTE.elena.hair}"/>
+    <!-- голова -->
+    <ellipse cx="110" cy="128" rx="40" ry="48" fill="${PALETTE.elena.skin}"/>
+    <!-- волосы спереди -->
+    <path d="M68 118 Q72 66 110 64 Q148 66 152 118 Q140 88 110 86 Q80 88 68 118 Z" fill="${PALETTE.elena.hair}"/>
+    <!-- заколка -->
+    <circle cx="148" cy="108" r="5" fill="${PALETTE.elena.accent}"/>
+    <!-- лицо -->
+    ${face(mood, 110, 128)}
+    <!-- нос -->
+    <path d="M110 130 L107 143 L113 143" stroke="#d8b090" stroke-width="1.8" fill="none"/>
+    <!-- помада -->
+    <path d="M104 160 Q110 164 116 160" stroke="#c0304a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- серёжки -->
+    <circle cx="72" cy="150" r="3.5" fill="${PALETTE.elena.accent}"/>
+    <circle cx="148" cy="150" r="3.5" fill="${PALETTE.elena.accent}"/>
+  </svg>`;
+}
+
+function miraSVG(mood='neutral') {
+  return `<svg viewBox="0 0 220 520" xmlns="http://www.w3.org/2000/svg">
+    <!-- худи -->
+    <path d="M65 230 Q50 360 48 520 L172 520 Q170 360 155 230 Z" fill="${PALETTE.mira.hoodie}"/>
+    <path d="M65 230 Q110 250 155 230 L150 270 Q110 285 70 270 Z" fill="#2a3846"/>
+    <!-- карман -->
+    <path d="M80 420 L140 420 L135 470 L85 470 Z" fill="#2a3846"/>
+    <!-- руки с ноутбуком -->
+    <path d="M65 260 Q40 340 70 400" stroke="${PALETTE.mira.skin}" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <path d="M155 260 Q180 340 150 400" stroke="${PALETTE.mira.skin}" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <!-- ноутбук -->
+    <path d="M70 400 L150 400 L160 470 L60 470 Z" fill="#1a1e28"/>
+    <rect x="68" y="398" width="84" height="8" rx="2" fill="#3a4558"/>
+    <path d="M72 404 L148 404 L155 462 L65 462 Z" fill="#2c3a4d"/>
+    <circle cx="110" cy="440" r="6" fill="${PALETTE.mira.accent}" opacity=".7"/>
+    <!-- капюшон -->
+    <path d="M70 210 Q60 170 80 150 L140 150 Q160 170 150 210 Z" fill="${PALETTE.mira.hoodie}"/>
+    <!-- шея -->
+    <rect x="98" y="170" width="24" height="40" fill="${PALETTE.mira.skin}"/>
+    <!-- голова -->
+    <ellipse cx="110" cy="128" rx="40" ry="48" fill="${PALETTE.mira.skin}"/>
+    <!-- волосы -->
+    <path d="M68 120 Q70 66 110 64 Q150 66 152 120 Q145 92 110 90 Q75 92 68 120 Z" fill="${PALETTE.mira.hair}"/>
+    <!-- хвостик -->
+    <path d="M150 100 Q175 110 178 140 Q180 160 170 170 Q172 140 155 120 Z" fill="${PALETTE.mira.hair}"/>
+    <!-- очки -->
+    <circle cx="92" cy="130" r="12" fill="none" stroke="#1a1e28" stroke-width="2.5"/>
+    <circle cx="128" cy="130" r="12" fill="none" stroke="#1a1e28" stroke-width="2.5"/>
+    <line x1="104" y1="130" x2="116" y2="130" stroke="#1a1e28" stroke-width="2.5"/>
+    <!-- лицо -->
+    ${face(mood, 110, 128)}
+    <!-- веснушки -->
+    <circle cx="92" cy="150" r="1.5" fill="#c98a6a"/>
+    <circle cx="98" cy="152" r="1.5" fill="#c98a6a"/>
+    <circle cx="122" cy="150" r="1.5" fill="#c98a6a"/>
+    <circle cx="128" cy="152" r="1.5" fill="#c98a6a"/>
+    <!-- нос -->
+    <path d="M110 132 L107 145 L113 145" stroke="#d8b090" stroke-width="1.8" fill="none"/>
+  </svg>`;
+}
+
 // ===== ПЕРСОНАЖИ =====
 const CHARS = {
-  detective: { name:'Детектив Ворон', letter:'В', side:'left' },
-  elena:     { name:'Елена', letter:'Е', side:'right' },   // владелица клуба
-  mira:      { name:'Мира', letter:'М', side:'right' }      // аспирантка-программистка
+  detective:{ name:'Детектив Ворон', side:'left', render:(mood)=>detectiveSVG(mood) },
+  elena:{ name:'Елена', side:'right', render:(pose,mood)=>elenaSVG(pose,mood) },
+  mira:{ name:'Мира', side:'right', render:(mood)=>miraSVG(mood) }
 };
 
 // ===== СЮЖЕТ =====
-// Узел: { speaker, text, show:[charId], choices:[{text, next, effect}] }
-// effect: { elena:+1, mira:+1, clue:'...' }
 const story = {};
 
 story.start = {
   speaker:'Детектив Ворон',
   text:'Дождь барабанит по стеклу третий день подряд. В моём офисе пахнет мокрым пальто и остывшим кофе. На столе — папка: Алиса Корн, студентка третьего курса, пропала пять дней назад. Последний раз её видели у клуба «Вельвет».',
-  show:['detective'],
+  show:[{id:'detective', mood:'neutral'}],
   choices:[
     { text:'Начать с хозяйки клуба — Елены.', next:'elena1' },
     { text:'Сначала найти аспирантку, которая видела Алису последней — Миру.', next:'mira1' }
   ]
 };
 
-// --- Ветка Елены ---
 story.elena1 = {
   speaker:'Елена',
   text:'«Вельвет» — моё королевство. Елена сидит в багровом кресле, скрестив руки. «Полиция уже приходила. Алиса была здесь в ту ночь, пила с друзьями. Ушла около полуночи. Одна. Больше я ничего не знаю, детектив».',
-  show:['detective','elena'],
+  show:[{id:'detective', mood:'neutral'},{id:'elena', pose:'cross', mood:'angry'}],
   choices:[
     { text:'— А кто ещё был в ту ночь?', next:'elena2' },
     { text:'— Вы выглядите уставшей. Всё в порядке?', next:'elena_romance', effect:{elena:1} }
@@ -154,7 +231,7 @@ story.elena1 = {
 story.elena2 = {
   speaker:'Елена',
   text:'«Много кто. Бармен, диджей, охранник... и эта аспирантка, Мира. Она часто торчит здесь — что-то пишет в ноутбуке до утра. Странная девушка». Елена отводит взгляд. Слишком быстро, для человека, которому нечего скрывать.',
-  show:['detective','elena'],
+  show:[{id:'detective', mood:'neutral'},{id:'elena', pose:'cross', mood:'sad'}],
   choices:[
     { text:'— Спасибо. Я проверю Миру.', next:'mira1', effect:{clue:'Елена заметила Миру в клубе'} },
     { text:'— Что вы скрываете, Елена?', next:'elena_press', effect:{elena:-1} }
@@ -164,7 +241,7 @@ story.elena2 = {
 story.elena_press = {
   speaker:'Елена',
   text:'Она усмехается. «Все скрывают что-то, детектив. Даже вы». В её голосе — вызов. А в глазах — что-то, похожее на страх.',
-  show:['detective','elena'],
+  show:[{id:'detective', mood:'angry'},{id:'elena', pose:'cross', mood:'angry'}],
   choices:[
     { text:'— Я вернусь. И проверю Миру.', next:'mira1' }
   ]
@@ -173,17 +250,16 @@ story.elena_press = {
 story.elena_romance = {
   speaker:'Елена',
   text:'Её плечи чуть расслабляются. «Дождь. Он выматывает». Пауза. «Знаете, детектив, вы первый, кто спросил о моём состоянии, а не о пропавшей девочке. Оставьте телефон. Если вспомню что-то — напишу». Её пальцы задерживаются на вашей визитке на секунду дольше, чем нужно.',
-  show:['detective','elena'],
+  show:[{id:'detective', mood:'smile'},{id:'elena', pose:'idle', mood:'smile'}],
   choices:[
     { text:'— Тогда начнём с Миры.', next:'mira1', effect:{clue:'Елена обещала помочь'} }
   ]
 };
 
-// --- Ветка Миры ---
 story.mira1 = {
   speaker:'Мира',
   text:'Мира сидит в кофейне напротив. Перед ней — ноутбук, чашка чая и стопка распечаток. «Вы про Алису? Да, я видела её. Но не то, что говорят копы». Она понижает голос. «Она собиралась разоблачить кое-кого. И я помогала ей с данными».',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'neutral'},{id:'mira', mood:'neutral'}],
   choices:[
     { text:'— Кого она собиралась разоблачить?', next:'mira2' },
     { text:'— Почему вы не сказали это полиции?', next:'mira_press', effect:{mira:1} }
@@ -193,7 +269,7 @@ story.mira1 = {
 story.mira2 = {
   speaker:'Мира',
   text:'Она смотрит в экран. «Елена. Владелица клуба. Алиса нашла в её бухгалтерии что-то про трафик, но доказательств не было. В ночь исчезновения Алиса шла к Елене с флешкой. И не дошла».',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'neutral'},{id:'mira', mood:'sad'}],
   choices:[
     { text:'— Где эта флешка сейчас?', next:'mira_flash', effect:{clue:'Мотив Елены'} },
     { text:'— Вы рисковали, помогая ей.', next:'mira_romance', effect:{mira:1} }
@@ -203,7 +279,7 @@ story.mira2 = {
 story.mira_press = {
   speaker:'Мира',
   text:'«Потому что мне не поверят. Я аспирантка, которая пишет диссертацию про кибербезопасность и торчит в клубах. А Елена — уважаемая бизнесвумен». Она сжимает чашку. «Я пыталась найти Алису сама. И, кажется, нашла зацепку».',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'neutral'},{id:'mira', mood:'angry'}],
   choices:[
     { text:'— Покажите.', next:'mira2', effect:{clue:'Мира нашла зацепку'} }
   ]
@@ -212,7 +288,7 @@ story.mira_press = {
 story.mira_romance = {
   speaker:'Мира',
   text:'Она впервые улыбается. Тихо, уголком губ. «Она была моей лучшей подругой. Я не могла иначе». Пауза. «Знаете, вы не похожи на детектива. Слишком... настоящий». Щёки выдают её с головой.',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'smile'},{id:'mira', mood:'smile'}],
   choices:[
     { text:'— Давайте найдём её вместе. Где флешка?', next:'mira_flash', effect:{clue:'Мотив Елены'} }
   ]
@@ -221,18 +297,17 @@ story.mira_romance = {
 story.mira_flash = {
   speaker:'Мира',
   text:'«Флешка у меня. Алиса оставила её в моём почтовом ящике перед уходом. Но данные зашифрованы. Мне нужен доступ к серверу клуба». Она смотрит на вас. «Или свидетель. Или признание».',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'neutral'},{id:'mira', mood:'neutral'}],
   choices:[
     { text:'— Идём в «Вельвет». Поговорим с Еленой.', next:'finale_elena' },
     { text:'— Сначала расшифруем флешку.', next:'finale_mira' }
   ]
 };
 
-// --- Финалы ---
 story.finale_elena = {
   speaker:'Елена',
   text:'Вы возвращаетесь в клуб вместе с Мирой. Елена ждёт у бара. «Я знала, что вы вернётесь». Пауза. «Ладно. Алиса жива. Я спрятала её — потому что тот, кто её искал, опаснее меня». В дверях появляется силуэт.',
-  show:['detective','elena'],
+  show:[{id:'detective', mood:'angry'},{id:'elena', pose:'cross', mood:'sad'}],
   choices:[
     { text:'— Кто это?', next:'end_truth' }
   ]
@@ -241,109 +316,96 @@ story.finale_elena = {
 story.finale_mira = {
   speaker:'Мира',
   text:'Вы взламываете сервер через гостевой Wi-Fi клуба. Файлы открываются. Это переписка. Алиса продала данные не Елене — она пыталась защитить Миру. В последнем сообщении: «Если я исчезну, не ищи меня. Это опасно».',
-  show:['detective','mira'],
+  show:[{id:'detective', mood:'sad'},{id:'mira', mood:'sad'}],
   choices:[
     { text:'— Она вас защищала.', next:'end_sacrifice' }
   ]
 };
 
 story.end_truth = {
-  speaker:'',
-  text:'',
   end:{ title:'Концовка: Правда у всех своя', text:'За дверью — бывший партнёр Елены, тот, кому принадлежали данные. Алиса даёт показания, клуб закрывают, но Елена избегает тюрьмы. Мира остаётся рядом. Вы пишете отчёт в три часа ночи. Дождь наконец стихает.' }
 };
 
 story.end_sacrifice = {
-  speaker:'',
-  text:'',
   end:{ title:'Концовка: Зашифрованная жертва', text:'Вы находите Алису в загородном доме. Она спряталась сама, чтобы выиграть время. Мира плачет у неё на плече. Вы закрываете дело и впервые за месяц спите спокойно. На столе — визитка Елены. Вы её не выбрасываете.' }
 };
 
 // ===== ДВИЖОК =====
-const sceneEl = document.getElementById('scene');
 const charLayer = document.getElementById('charLayer');
 const speakerEl = document.getElementById('speaker');
 const textEl = document.getElementById('text');
 const choicesEl = document.getElementById('choices');
-const nextHint = document.getElementById('nextHint');
 const endScreen = document.getElementById('endScreen');
 const sprites = {};
-let current = null;
-let typingTimer = null;
-let fullText = '';
-let typed = false;
+let typingTimer = null, fullText = '', typed = false;
 let stats = { elena:0, mira:0, clues:[] };
 
-function renderSprites(show) {
-  // убрать отсутствующих
+function renderSprites(list) {
+  const wanted = list.map(x => x.id);
+  // спрятать отсутствующих
   Object.keys(sprites).forEach(id => {
-    if (!show.includes(id)) { sprites[id].classList.remove('show'); }
+    if (!wanted.includes(id)) sprites[id].classList.remove('show');
   });
-  // добавить/показать
-  show.forEach(id => {
-    if (!sprites[id]) {
-      const c = CHARS[id];
-      const el = document.createElement('div');
+  list.forEach(conf => {
+    const c = CHARS[conf.id];
+    let el = sprites[conf.id];
+    if (!el) {
+      el = document.createElement('div');
       el.className = 'sprite ' + c.side;
-      el.textContent = c.letter;
-      el.dataset.id = id;
       charLayer.appendChild(el);
-      sprites[id] = el;
-      requestAnimationFrame(() => setTimeout(() => el.classList.add('show'), 20));
-    } else {
-      sprites[id].classList.add('show');
+      sprites[conf.id] = el;
     }
+    // перерисовать SVG под нужную позу/настроение
+    el.innerHTML = c.render(conf.mood || 'neutral', conf.pose || 'idle');
+    if (conf.id === 'elena' && conf.pose) {
+      el.innerHTML = elenaSVG(conf.pose, conf.mood || 'neutral');
+    }
+    requestAnimationFrame(() => setTimeout(() => el.classList.add('show'), 20));
   });
 }
 
-function highlightSpeaker(speakerName) {
-  Object.values(sprites).forEach(s => s.classList.remove('speaking'));
+function highlightSpeaker(name) {
+  Object.values(sprites).forEach(s => s.classList.remove('dim'));
   Object.entries(CHARS).forEach(([id, c]) => {
-    if (c.name === speakerName && sprites[id]) sprites[id].classList.add('speaking');
+    if (sprites[id]) {
+      if (c.name !== name) sprites[id].classList.add('dim');
+      else sprites[id].classList.remove('dim');
+    }
   });
 }
 
 function typeText(text) {
   clearInterval(typingTimer);
-  fullText = text;
-  typed = false;
-  textEl.textContent = '';
+  fullText = text; typed = false; textEl.textContent = '';
   let i = 0;
   typingTimer = setInterval(() => {
     textEl.textContent = fullText.slice(0, ++i);
     if (i >= fullText.length) { clearInterval(typingTimer); typed = true; }
-  }, 18);
+  }, 16);
 }
 
 function showNode(id) {
   const node = story[id];
   if (!node) return;
-  current = node;
-
   if (node.end) {
     endScreen.style.display = 'flex';
     document.getElementById('endTitle').textContent = node.end.title;
     document.getElementById('endText').textContent = node.end.text;
     return;
   }
-
   if (node.effect) applyEffect(node.effect);
-
   renderSprites(node.show || []);
   speakerEl.textContent = node.speaker || '';
   highlightSpeaker(node.speaker);
   typeText(node.text || '');
   choicesEl.innerHTML = '';
-  nextHint.style.display = 'block';
-
-  // Показываем выборы сразу (но текст печатается)
   (node.choices || []).forEach(ch => {
     const btn = document.createElement('button');
     btn.className = 'choice';
     btn.textContent = ch.text;
     btn.onclick = (e) => {
       e.stopPropagation();
-      if (!typed) { finishTyping(); return; } // если не дочитали — сначала дочитать
+      if (!typed) { finishTyping(); return; }
       if (ch.effect) applyEffect(ch.effect);
       showNode(ch.next);
     };
@@ -351,20 +413,12 @@ function showNode(id) {
   });
 }
 
-function finishTyping() {
-  clearInterval(typingTimer);
-  textEl.textContent = fullText;
-  typed = true;
-}
+function finishTyping() { clearInterval(typingTimer); textEl.textContent = fullText; typed = true; }
 
 function applyEffect(eff) {
   if (eff.elena) stats.elena += eff.elena;
   if (eff.mira) stats.mira += eff.mira;
   if (eff.clue && !stats.clues.includes(eff.clue)) stats.clues.push(eff.clue);
-  updateStatsBar();
-}
-
-function updateStatsBar() {
   const parts = [];
   if (stats.elena) parts.push('Елена ' + (stats.elena>0?'+':'') + stats.elena);
   if (stats.mira) parts.push('Мира ' + (stats.mira>0?'+':'') + stats.mira);
@@ -374,12 +428,10 @@ function updateStatsBar() {
     : 'Тени на мокром асфальте';
 }
 
-// клик по сцене/тексту — дочитать или продолжить
-sceneEl.addEventListener('click', () => { if (!typed) finishTyping(); });
+document.getElementById('scene').addEventListener('click', () => { if (!typed) finishTyping(); });
 textEl.addEventListener('click', (e) => { e.stopPropagation(); if (!typed) finishTyping(); });
 
-// старт
 showNode('start');
 </script>
 </body>
-</html>
+</
